@@ -122,9 +122,11 @@ int main(){
 using namespace std;
 bool palindrome(string s, int l, int r){
     if(l>=r){ 
-    return true;}
-    if(s[l]!=s[r]) {
-    return false;}
+    return true;
+    }
+    if(s[l]!=s[r]){
+    return false;
+    }
     return palindrome(s, l+1, r-1);
 }
 int main(){
@@ -134,4 +136,126 @@ int main(){
         cout << "Palindrome";
     else
         cout << "Not palindrome";
+}
+//task11
+#include <iostream>
+using namespace std;
+int sumArr(int arr[], int n){
+    if(n==0){
+    return 0;
+    }
+    return arr[n-1] + sumArr(arr, n-1);
+}
+int main(){
+    int n;
+    cin >> n;
+    int arr[n];
+    for(int i=0;i<n;i++) cin >> arr[i];
+    cout << sumArr(arr,n);
+}
+//task12
+#include <iostream>
+using namespace std;
+int maxArr(int arr[], int n){
+    if(n==1){
+    return arr[0];
+    }
+    return max(arr[n-1], maxArr(arr, n-1));
+}
+int main(){
+    int n;
+    cin >> n;
+    int arr[n];
+    for(int i=0;i<n;i++) cin >> arr[i];
+    cout << maxArr(arr,n);
+}
+//task13
+#include <iostream>
+using namespace std;
+
+int cntOcc(int arr[], int n, int target){
+    if(n==0) return 0;
+    if(arr[n-1]==target)
+        return 1 + cntOcc(arr,n-1,target);
+    return cntOcc(arr,n-1,target);
+}
+int main(){
+    int n, target;
+    cin >> n;
+    int arr[n];
+    for(int i=0;i<n;i++) cin >> arr[i];
+    cin >> target;
+    cout << cntOcc(arr,n,target);
+}
+//task14
+#include <iostream>
+using namespace std;
+bool linearSearch(int arr[], int n, int target){
+    if(n==0){
+    return false;
+    }
+    if(arr[n-1]==target){
+    return true;
+    }
+    return linearSearch(arr,n-1,target);
+}
+int main(){
+    int n, target;
+    cin >> n;
+    int arr[n];
+    for(int i=0;i<n;i++) cin >> arr[i];
+    cin >> target;
+    if(linearSearch(arr,n,target))
+        cout << "Found";
+    else
+        cout << "Not found";
+}
+//task15
+#include <iostream>
+using namespace std;
+bool isSorted(int arr[], int n){
+    if(n==1){
+    return true;
+    }
+    if(arr[n-1] < arr[n-2]){
+    return false;
+    }
+    return isSorted(arr,n-1);
+}
+int main(){
+    int n;
+    cin >> n;
+    int arr[n];
+    for(int i=0;i<n;i++) cin >> arr[i];
+
+    if(isSorted(arr,n))
+        cout << "Sorted";
+    else
+        cout << "Not sorted";
+}
+//task16
+#include <iostream>
+using namespace std;
+int binarySearch(int arr[], int l, int r, int target){
+    if(l>r) return -1;
+    int mid = (l+r)/2;
+    if(arr[mid]==target){
+    return mid;
+    }
+    if(arr[mid] > target)
+        return binarySearch(arr,l,mid-1,target);
+    else
+        return binarySearch(arr,mid+1,r,target);
+}
+int main(){
+    int n, target;
+    cin >> n;
+    int arr[n];
+    for(int i=0;i<n;i++) cin >> arr[i];
+    cin >> target;
+    int res = binarySearch(arr,0,n-1,target);
+    if(res==-1)
+        cout << "Not found";
+    else
+        cout << "Element found at index " << res;
 }

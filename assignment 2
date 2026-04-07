@@ -1,0 +1,155 @@
+#include <iostream>
+using namespace std;
+struct Node {
+    int data;
+    Node* next;
+};
+// 1. Insert at beginning
+Node* insertAtBeginning(Node* head, int value) {
+    Node* newNode = new Node();
+    newNode->data = value;
+    newNode->next = head;
+    return newNode;
+}
+// 2. Insert at end
+Node* insertAtEnd(Node* head, int value) {
+    Node* newNode = new Node();
+    newNode->data = value;
+    newNode->next = nullptr;
+    if (head == nullptr) return newNode;
+    Node* cur = head;
+    while (cur->next != nullptr) {
+        cur = cur->next;
+    }
+    cur->next = newNode;
+    return head;
+}
+// 3. Remove last element
+Node* removeLast(Node* head) {
+    if (head == nullptr) return nullptr;
+    if (head->next == nullptr) {
+        delete head;
+        return nullptr;
+    }
+    Node* cur = head;
+    while (cur->next->next != nullptr) {
+        cur = cur->next;
+    }
+    delete cur->next;
+    cur->next = nullptr;
+    return head;
+}
+// 4. Print list
+void printList(Node* head) {
+    while (head != nullptr) {
+        cout << head->data << " ";
+        head = head->next;
+    }
+    cout << endl;
+}
+// 5. Search element
+bool search(Node* head, int value) {
+    while (head != nullptr) {
+        if (head->data == value) return true;
+        head = head->next;
+    }
+    return false;
+}
+// 6. Insert at position
+Node* insertAtPosition(Node* head, int value, int pos) {
+    if (pos == 0) {
+        Node* newNode = new Node();
+        newNode->data = value;
+        newNode->next = head;
+        return newNode;
+    }
+    Node* cur = head;
+    for (int i = 0; i < pos - 1 && cur != nullptr; i++) {
+        cur = cur->next;
+    }
+    if (cur == nullptr) return head;
+    Node* newNode = new Node();
+    newNode->data = value;
+    newNode->next = cur->next;
+    cur->next = newNode;
+    return head;
+}
+// 7. Remove by value
+Node* removeByValue(Node* head, int value) {
+    if (head == nullptr) return nullptr;
+    if (head->data == value) {
+        Node* temp = head;
+        head = head->next;
+        delete temp;
+        return head;
+    }
+    Node* cur = head;
+    while (cur->next != nullptr && cur->next->data != value) {
+        cur = cur->next;
+    }
+    if (cur->next != nullptr) {
+        Node* temp = cur->next;
+        cur->next = temp->next;
+        delete temp;
+    }
+    return head;
+}
+// 8. Combine two lists
+Node* combine(Node* a, Node* b) {
+    if (a == nullptr) return b;
+    Node* cur = a;
+    while (cur->next != nullptr) {
+        cur = cur->next;
+    }
+    cur->next = b;
+    return a;
+}
+// 9. Reverse list
+Node* reverseList(Node* head) {
+    Node* prev = nullptr;
+    Node* cur = head;
+    while (cur != nullptr) {
+        Node* next = cur->next;
+        cur->next = prev;
+        prev = cur;
+        cur = next;
+    }
+    return prev;
+}
+// 10. Sort (Insertion Sort)
+Node* sortedInsert(Node* sorted, Node* newNode) {
+    if (sorted == nullptr || newNode->data <= sorted->data) {
+        newNode->next = sorted;
+        return newNode;
+    }
+    Node* cur = sorted;
+    while (cur->next != nullptr && cur->next->data < newNode->data) {
+        cur = cur->next;
+    }
+    newNode->next = cur->next;
+    cur->next = newNode;
+    return sorted;
+}
+Node* insertionSort(Node* head) {
+    Node* sorted = nullptr;
+    while (head != nullptr) {
+        Node* next = head->next;
+        sorted = sortedInsert(sorted, head);
+        head = next;
+    }
+    return sorted;
+}
+int main() {
+    Node* head = nullptr;
+    head = insertAtBeginning(head, 3);
+    head = insertAtBeginning(head, 1);
+    head = insertAtEnd(head, 5);
+    head = insertAtEnd(head, 2);
+    printList(head);
+    head = insertionSort(head);
+    printList(head);
+    head = reverseList(head);
+    printList(head);
+    cout << search(head, 5) << endl;
+    return 0;
+}

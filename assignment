@@ -1,0 +1,353 @@
+#task1
+def two_sum(nums, target):
+    seen = {}
+    i = 0
+
+    for num in nums:
+        diff = target - num
+
+        if diff in seen:
+            return [seen[diff], i]
+
+        seen[num] = i
+        i += 1
+
+
+# Example
+print(two_sum([2, 7, 11, 15], 9))  
+#task2
+def first_unique_char(s):
+    count = {}
+
+    for ch in s:
+        count[ch] = count.get(ch, 0) + 1
+
+    i = 0
+    for ch in s:
+        if count[ch] == 1:
+            return i
+        i += 1
+
+    return -1
+
+
+# Example
+print(first_unique_char("leetcode"))  
+#task3
+def is_isomorphic(s, t):
+    if len(s) != len(t):
+        return False
+
+    map_st = {}
+    map_ts = {}
+
+    for i in range(len(s)):
+        c1 = s[i]
+        c2 = t[i]
+
+        if (c1 in map_st and map_st[c1] != c2) or \
+           (c2 in map_ts and map_ts[c2] != c1):
+            return False
+
+        map_st[c1] = c2
+        map_ts[c2] = c1
+
+    return True
+
+
+# Example
+print(is_isomorphic("egg", "add"))  
+#task4
+def is_happy(n):
+    seen = set()
+
+    def next_num(x):
+        total = 0
+        while x > 0:
+            x, d = divmod(x, 10)
+            total += d * d
+        return total
+
+    while n != 1 and n not in seen:
+        seen.add(n)
+        n = next_num(n)
+
+    return n == 1
+
+
+# Example
+print(is_happy(19))  
+#task5
+from collections import deque
+
+class TreeNode:
+    def __init__(self, value):
+        self.value = value
+        self.left = None
+        self.right = None
+
+
+# Tree: [3, 9, 20, None, None, 15, 7]
+def build_tree():
+    root = TreeNode(3)
+    root.left = TreeNode(9)
+    root.right = TreeNode(20)
+    root.right.left = TreeNode(15)
+    root.right.right = TreeNode(7)
+    return root
+
+
+def levelOrder(root):
+    result = []
+    queue = deque([root])
+
+    while queue:
+        level = []
+        for _ in range(len(queue)):
+            node = queue.popleft()
+            level.append(node.value)
+
+            if node.left:
+                queue.append(node.left)
+            if node.right:
+                queue.append(node.right)
+
+        result.append(level)
+
+    return result
+
+
+root = build_tree()
+print(levelOrder(root))  # [[3], [9, 20], [15, 7]]
+
+
+#task6
+class TreeNode:
+    def __init__(self, value):
+        self.value = value
+        self.left = None
+        self.right = None
+
+def build_tree():
+    root = TreeNode(3)
+    root.left = TreeNode(9)
+    root.right = TreeNode(20)
+    root.right.left = TreeNode(15)
+    root.right.right = TreeNode(7)
+    return root
+
+
+def maxDepth(root):
+    if not root:
+        return 0
+    return 1 + max(maxDepth(root.left), maxDepth(root.right))
+
+
+root = build_tree()
+print(maxDepth(root))  
+
+
+
+#task7
+class TreeNode:
+    def __init__(self, value):
+        self.value = value
+        self.left = None
+        self.right = None
+
+
+def build_tree():
+    root = TreeNode(1)
+    root.left = TreeNode(2)
+    root.right = TreeNode(2)
+
+    root.left.left = TreeNode(3)
+    root.left.right = TreeNode(4)
+
+    root.right.left = TreeNode(4)
+    root.right.right = TreeNode(3)
+
+    return root
+
+
+def isSymmetric(root):
+    def isMirror(a, b):
+        if not a and not b:
+            return True
+        if not a or not b:
+            return False
+        return (
+            a.value == b.value and
+            isMirror(a.left, b.right) and
+            isMirror(a.right, b.left)
+        )
+
+    return isMirror(root, root)
+
+
+root = build_tree()
+print(isSymmetric(root))  
+#task8
+class TreeNode:
+    def __init__(self, value):
+        self.value = value
+        self.left = None
+        self.right = None
+
+
+# Build tree: [1, None, 3, 2, 4, None, None, None, 5]
+def build_tree():
+    root = TreeNode(1)
+    root.right = TreeNode(3)
+    root.right.left = TreeNode(2)
+    root.right.right = TreeNode(4)
+    root.right.right.right = TreeNode(5)
+    return root
+
+
+def longestConsecutive(root):
+    def dfs(node, parent_val, length):
+        if not node:
+            return length
+
+        # check if consecutive
+        if node.value == parent_val + 1:
+            length += 1
+        else:
+            length = 1
+
+        # explore both sides
+        return max(
+            length,
+            dfs(node.left, node.value, length),
+            dfs(node.right, node.value, length)
+        )
+
+    return dfs(root, float('-inf'), 0)
+
+
+# Run
+root = build_tree()
+print(longestConsecutive(root))  
+#task9
+def sort_colors(nums):
+    l, m, r = 0, 0, len(nums) - 1
+
+    while m <= r:
+        if nums[m] == 0:
+            nums[l], nums[m] = nums[m], nums[l]
+            l += 1
+            m += 1
+        elif nums[m] == 1:
+            m += 1
+        else:
+            nums[m], nums[r] = nums[r], nums[m]
+            r -= 1
+
+
+# Example
+nums = [2, 0, 2, 1, 1, 0]
+sort_colors(nums)
+print(nums)  # [0,0,1,1,2,2]
+
+#task10
+def quick_sort(nums, l=0, r=None):
+    if r is None:
+        r = len(nums) - 1
+
+    if l < r:
+        p = partition(nums, l, r)
+        quick_sort(nums, l, p - 1)
+        quick_sort(nums, p + 1, r)
+
+def partition(nums, l, r):
+    pivot = nums[r]
+    i = l
+
+    for j in range(l, r):
+        if nums[j] <= pivot:
+            nums[i], nums[j] = nums[j], nums[i]
+            i += 1
+
+    nums[i], nums[r] = nums[r], nums[i]
+    return i
+
+
+# Example
+nums = [5, 2, 3, 1]
+quick_sort(nums)
+print(nums)
+
+
+#task11
+def merge_sort(nums):
+    if len(nums) <= 1:
+        return nums
+
+    mid = len(nums) // 2
+    left = merge_sort(nums[:mid])
+    right = merge_sort(nums[mid:])
+
+    return merge(left, right)
+
+def merge(a, b):
+    res = []
+    i = j = 0
+
+    while i < len(a) and j < len(b):
+        if a[i] < b[j]:
+            res.append(a[i])
+            i += 1
+        else:
+            res.append(b[j])
+            j += 1
+
+    return res + a[i:] + b[j:]
+
+
+# Example
+print(merge_sort([4, 2, 1, 3]))
+
+
+
+#task12
+def heap_sort(nums):
+    n = len(nums)
+
+    def heapify(n, i):
+        largest = i
+        l = 2*i + 1
+        r = 2*i + 2
+
+        if l < n and nums[l] > nums[largest]:
+            largest = l
+        if r < n and nums[r] > nums[largest]:
+            largest = r
+
+        if largest != i:
+            nums[i], nums[largest] = nums[largest], nums[i]
+            heapify(n, largest)
+
+    for i in range(n//2 - 1, -1, -1):
+        heapify(n, i)
+
+    for i in range(n-1, 0, -1):
+        nums[0], nums[i] = nums[i], nums[0]
+        heapify(i, 0)
+
+
+# Example
+nums = [4, 10, 3, 5, 1]
+heap_sort(nums)
+print(nums)
+
+
+
+
+
+
+
+
+
+
+

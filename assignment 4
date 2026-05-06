@@ -1,0 +1,72 @@
+#task3andtask4
+from collections import deque
+import heapq
+
+graph1 = {
+    'A': ['C', 'B', 'D'],
+    'B': ['A', 'C', 'E', 'G'],
+    'C': ['A', 'B', 'D'],
+    'D': ['C', 'A'],
+    'E': ['G', 'F', 'B'],
+    'F': ['G', 'E'],
+    'G': ['F', 'B']
+}
+
+def dfs(graph, node, visited=None):
+    if visited is None:
+        visited = []
+    if node not in visited:
+        visited.append(node)
+        for neighbor in graph[node]:
+            dfs(graph, neighbor, visited)
+    return visited
+
+def bfs(graph, start):
+    visited = []
+    queue = deque([start])
+    visited.append(start)
+    while queue:
+        node = queue.popleft()
+        for neighbor in graph[node]:
+            if neighbor not in visited:
+                visited.append(neighbor)
+                queue.append(neighbor)
+    return visited
+
+print(dfs(graph1, 'A'))
+print(bfs(graph1, 'A'))
+
+graph2 = {
+    'Edinburgh': [('Stirling', 50), ('Glasgow', 70), ('Perth', 100)],
+    'Stirling': [('Edinburgh', 50), ('Glasgow', 50), ('Perth', 40)],
+    'Glasgow': [('Edinburgh', 70), ('Stirling', 50)],
+    'Perth': [('Edinburgh', 100), ('Stirling', 40), ('Dundee', 60)],
+    'Dundee': [('Perth', 60)]
+}
+
+def dijkstra(graph, start):
+    distances = {node: float('inf') for node in graph}
+    distances[start] = 0
+    previous = {node: None for node in graph}
+    pq = [(0, start)]
+    while pq:
+        current_distance, current_node = heapq.heappop(pq)
+        for neighbor, weight in graph[current_node]:
+            distance = current_distance + weight
+            if distance < distances[neighbor]:
+                distances[neighbor] = distance
+                previous[neighbor] = current_node
+                heapq.heappush(pq, (distance, neighbor))
+    return distances, previous
+
+def get_path(previous, end):
+    path = []
+    current = end
+    while current:
+        path.append(current)
+        current = previous[current]
+    return path[::-1]
+
+distances, previous = dijkstra(graph2, 'Edinburgh')
+print(distances['Dundee'])
+print(get_path(previous, 'Dundee'))
